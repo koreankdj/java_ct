@@ -4,13 +4,9 @@ class Solution {
     
     public int solution(int[] numbers, int target) {
         
-        int answer = 0;
-        
+
         subset(0, numbers.length, 0, numbers, target);
-        
-        answer = cnt;
-        
-        return answer;
+        return cnt;
         
     }
     
