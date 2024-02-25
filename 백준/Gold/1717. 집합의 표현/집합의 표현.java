@@ -8,11 +8,13 @@ public class Main {
 	static int n, m;
 	static int[] parents;
 	
+	static StringBuilder sb;
+	
 	public static void main(String[] args) throws IOException {
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
-		
+		sb = new StringBuilder();
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
@@ -31,12 +33,14 @@ public class Main {
 				union(f, t);
 			}else {
 				if(find(f) == find(t)) {
-					System.out.println("YES");
+					sb.append("YES").append("\n");
 				}else {
-					System.out.println("NO");
+					sb.append("NO").append("\n");
 				}
 			}
 		}
+		
+		System.out.println(sb);
 		
 	}
 	
