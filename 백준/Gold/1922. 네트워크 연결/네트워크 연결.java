@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -10,61 +9,62 @@ public class Main {
 	static int N, M;
 	static int[] parents;
 	
-	
-	static class Line implements Comparable<Line>{
+	static class Edge implements Comparable<Edge>{
 		int from, to, value;
-		Line(int from, int to, int value){
+		public Edge(int from, int to, int value) {
 			this.from = from;
 			this.to = to;
 			this.value = value;
 		}
-		
 		@Override
-		public int compareTo(Line o) {
+		public int compareTo(Edge o) {
 			return this.value - o.value;
 		}
 	}
 	
-	static Line[] lines;
+	static Edge[] edges;
 	
 	public static void main(String[] args) throws IOException {
-		
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
+		
 		N = Integer.parseInt(br.readLine());
 		M = Integer.parseInt(br.readLine());
 		
-		lines = new Line[M];
 		
+		edges = new Edge[M];
 		for(int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
 			int f = Integer.parseInt(st.nextToken());
 			int t = Integer.parseInt(st.nextToken());
 			int v = Integer.parseInt(st.nextToken());
 			
-			lines[i] = new Line(f, t, v);
+			edges[i] = new Edge(f, t, v);
 		}
 		
 		kruscal();
+		
+		
 	}
 	
 	public static void kruscal() {
-		Arrays.sort(lines);
 		make();
-		
+		Arrays.sort(edges);
 		int weight = 0;
 		int cnt = 0;
 		
-		for(Line line : lines) {
-			int f = line.from;
-			int t = line.to;
-			int v = line.value;
+		for(Edge edge : edges) {
+			int f = edge.from;
+			int t = edge.to;
+			int w = edge.value;
 			
 			if(!union(f, t)) continue;
-			weight += v;
+			weight += w;
 			if(++cnt == N-1) break;
 		}
 		System.out.println(weight);
+		
 	}
 	
 	public static void make() {
@@ -84,9 +84,13 @@ public class Main {
 		int aRoot = find(a);
 		int bRoot = find(b);
 		
-		if(aRoot == bRoot) return false;		// a 와 b 가 같은 트리에 속해있다. 
+		if(aRoot == bRoot) return false;
 		
-		parents[bRoot] = aRoot;
+		if(aRoot < bRoot) {
+			parents[bRoot] = aRoot;
+		}else {
+			parents[aRoot] = bRoot;
+		}
 		return true;
 	}
 
