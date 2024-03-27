@@ -1,22 +1,31 @@
+import java.util.*;
+
 class Solution {
     
-    static int cnt = 0;
+    static int answer, len;
     
     public int solution(int[] numbers, int target) {
-        subset(0, numbers.length, 0, numbers, target);
-        return cnt;
+        
+        
+        answer = 0;
+        len = numbers.length;
+        
+        subset(numbers, 0, 0, target);
+        
+        return answer;
     }
     
-    static public void subset(int idx, int R, int sum, int[] numbers, int target){
-        
-        if(idx == R){
-            if(sum == target) cnt++;
+    static public void subset(int[] arr, int depth, int value, int target){
+        if(depth == len){
+            if(value == target){
+                answer++;
+            }
             return;
         }
-        // 합함
-        subset(idx + 1, R, sum + numbers[idx], numbers, target);
-        // 뺌
-        subset(idx + 1, R, sum - numbers[idx], numbers, target);
+        
+        // 더해줌
+        subset(arr, depth+1, value+arr[depth], target);
+        // 빼줌
+        subset(arr, depth+1, value-arr[depth], target);
     }
-    
 }
