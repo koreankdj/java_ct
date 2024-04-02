@@ -1,39 +1,43 @@
 import java.util.*;
 
+
 class Solution {
     public int[] solution(int n, String[] words) {
+
         int[] answer = new int[2];
         
         int words_len = words.length;
+        Map<String, Integer> dict = new HashMap<>();
         
-        ArrayList<String>[] alps = new ArrayList[26];
-        
-        for(int i = 0; i < 26; i++){
-            alps[i] = new ArrayList<String>();
-        }
-        
-        alps[words[0].charAt(0) - 'a'].add(words[0]);
+        String prev = words[0];
+        dict.put(prev, 1);
         
         for(int i = 1; i < words_len; i++){
             
-            // 이전 마지막 글자랑 다음 마지막 글자가 다른 경우
-            if(words[i-1].charAt(words[i-1].length() - 1) != words[i].charAt(0)){
-                answer[0] = (i) % n + 1;
-                answer[1] = (i) / n + 1;
-                break;
-            }
+            String cur = words[i];
             
-            // 등장했던 단어가 또 나오는 경우
-            if(alps[words[i].charAt(0) - 'a'].contains(words[i])){
-                answer[0] = i % n + 1;
-                answer[1] = i / n + 1;
+            if(dict.get(cur)!= null || prev.charAt(prev.length()-1) != cur.charAt(0)){
+                int times = 0;
+                int person = 0;
+                
+                if((i+1) % n==0){
+                   times = (i+1)/n; 
+                }else{
+                    times = (i+1)/n + 1;
+                }
+                
+                person = i % n + 1;
+                answer[1] = times;
+                answer[0] = person;
                 break;
             }else{
-                alps[words[i].charAt(0) - 'a'].add(words[i]);
+                prev = cur;
+                dict.put(cur, 1);
             }
-            
         }
-
+        
+        
+          
         return answer;
     }
 }
