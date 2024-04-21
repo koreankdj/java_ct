@@ -1,54 +1,76 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    
-    static int n, parent[];
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer stz;
-        n = Integer.parseInt(br.readLine());
-        int m = Integer.parseInt(br.readLine());
-        parent = new int[n+1];
-        for(int i = 1; i <= n; i++)
-            parent[i] = i;
-        for(int i = 1; i <= n; i++) {
-            stz = new StringTokenizer(br.readLine());
-            for(int j = 1; j <= n; j++) {
-                int link = Integer.parseInt(stz.nextToken());
-                if(j > i && link == 1)
-                    union(i, j);
-            }
-        }
-        stz = new StringTokenizer(br.readLine());
-        int root = -1;
-        for(int i = 1; i <= m; i++) {
-            int now = Integer.parseInt(stz.nextToken());
-            if(root == -1)
-                root = find(now);
-            if(root != find(now)) {
-                System.out.println("NO");
-                return;
-            }
-        }
-        System.out.println("YES");
-    }
-    
-    public static void union(int n1, int n2) {
-        int p1 = find(n1);
-        int p2 = find(n2);
-        
-        if(p1 > p2)
-            parent[p1] = p2;
-        else
-            parent[p2] = p1;
-    }
-    
-    public static int find(int n) {
-        if(parent[n] == n)
-            return n;
-            
-        return parent[n] = find(parent[n]);
-    }
+
+	static int N, M;
+	static int[] parents;
+	static int[][] map;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		
+		N = Integer.parseInt(br.readLine());
+		M = Integer.parseInt(br.readLine());
+		
+		make();
+		
+		for(int i = 1; i <= N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for(int j = 1; j <= N; j++) {
+				int conn = Integer.parseInt(st.nextToken());
+				if(conn == 1) {
+					union(i, j);
+				}
+			}
+		}
+		
+		int r = -1;
+		boolean flag = true;
+		
+		st = new StringTokenizer(br.readLine());
+		for(int i = 0; i < M; i++) {
+			int next = Integer.parseInt(st.nextToken());
+			
+			if(r == -1 && flag) {
+				r = find(next);
+			}else if(flag){
+				if(r != find(next)) flag = false;
+			}
+		}
+		
+		String msg = flag ? "YES" : "NO";
+		System.out.println(msg);
+	}
+	
+	public static void make() {
+		map = new int[N+1][N+1];
+		parents = new int[N+1];
+		for(int i = 1; i < N; i++) {
+			parents[i] = i;
+		}
+	}
+	public static int find(int v) {
+		if(parents[v] == v) return v;
+		
+		return parents[v] = find(parents[v]);
+	}
+	public static boolean union(int a, int b) {
+		int aRoot = find(a);
+		int bRoot = find(b);
+		
+		if(aRoot == bRoot) return false;
+		
+		if(aRoot<bRoot) {
+			parents[bRoot] = aRoot;
+		}else {
+			parents[aRoot] = bRoot;
+		}
+		
+		return true;
+	}
+
 }
