@@ -1,25 +1,29 @@
 import java.util.*;
+import java.io.*;
 
 class Solution {
+    
+    static Map<String, Integer> map = new HashMap<>();
+    
     public boolean solution(String[] phone_book) {
-        int cnt = phone_book.length;
-        Map<String, Integer> map = new HashMap<>();
+        int len = phone_book.length;
         
-        boolean answer = true;
-        for(int i = 0; i < cnt; i++) {
-        	map.put(phone_book[i], i);
+        // map에 넣는 과정
+        for(int i = 0; i < len; i++){
+            map.put(phone_book[i], 1);
         }
-
-        for(int i = 0; i < cnt; i++) {
-        	for(int j = 0; j < phone_book[i].length(); j++) {
-        		if(map.containsKey(phone_book[i].substring(0, j))) {
-        			answer = false;
-        			return answer;
-        		}
-        	}
-        }
-
         
-        return answer;
+        // map에 있는 단어가 접두사인지 확인하는 과정
+        for(int i = 0; i < len; i++){
+            char[] target = phone_book[i].toCharArray();
+            String check = "";
+            
+            for(int j = 0; j < target.length-1; j++){
+                check+=target[j];
+                if(map.get(check) != null) return false;
+            }
+        }
+        
+        return true;
     }
 }
