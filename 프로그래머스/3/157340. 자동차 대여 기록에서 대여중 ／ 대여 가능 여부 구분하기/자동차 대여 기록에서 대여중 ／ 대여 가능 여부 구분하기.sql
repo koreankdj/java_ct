@@ -1,11 +1,15 @@
-SELECT CAR_ID, 
- (CASE WHEN CAR_ID IN (
-     SELECT CAR_ID 
-     FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
-     WHERE '2022-10-16' BETWEEN DATE_FORMAT(START_DATE, '%Y-%m-%d') and DATE_FORMAT(END_DATE, '%Y-%m-%d')) 
-  THEN '대여중'
-  ELSE '대여 가능'
- END) as AVAILABILITY
-FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
-GROUP BY CAR_ID
-ORDER BY 1 DESC;
+-- 코드를 입력하세요
+with T1 as (
+    select car_id
+    from CAR_RENTAL_COMPANY_RENTAL_HISTORY 
+    where '2022-10-16' between start_date and end_date
+)
+
+select car_id, 
+    (case 
+        when car_id in (select * from T1) then '대여중'
+        else '대여 가능'
+    end) as availability
+from CAR_RENTAL_COMPANY_RENTAL_HISTORY 
+group by car_id
+order by 1 desc;
