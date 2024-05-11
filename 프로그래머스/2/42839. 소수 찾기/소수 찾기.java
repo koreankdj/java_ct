@@ -1,49 +1,70 @@
 import java.util.*;
 
 class Solution {
-        static Set<Integer> set;
-    static boolean[] visited = new boolean[7]; // numbers는 길이 1 이상 7 이하인 문자열
-
-    public static int solution(String numbers) {
-        int answer = 0;
-        set = new HashSet<>();
-        dfs(numbers, "", 0);
- 
-        for (Integer num : set) {
-            if (isPrime(num)) {
-                answer++;
-            }
+    
+    
+    static int n, answer;
+    static int[] nums;
+    
+    static Map<Integer, Integer> map = new HashMap<>();
+    
+    public int solution(String numbers) {
+        
+        n = numbers.length();
+        nums = new int[n];
+        
+        for(int i = 0; i < n; i++){
+            nums[i] = i;
         }
+        
+        for(int i = 1; i <= n; i++){
+            perm(0, i, numbers);
+        }
+        
+        ArrayList<Integer> keys = new ArrayList<>(map.keySet());
+        for(int i = 0; i < keys.size(); i++){
+            
+            int now = keys.get(i);
+            //System.out.println("수 : " + now);
+            
+            if(check(now)) answer++;
+        }
+        
         return answer;
     }
- 
-    public static void dfs(String numbers, String s, int depth) {
-		// numbers 의 끝까지 다 탐색했다면 종료
-        if (depth > numbers.length()) {
+    
+    public static void perm(int depth, int target, String str){
+        if(depth == target){
+            String check = "";
+            for(int i = 0; i < target; i++){
+                check += str.charAt(nums[i]);
+            }
+            
+            map.put(Integer.parseInt(check), 1);
+            
             return;
         }
- 
-        for (int i = 0; i < numbers.length(); i++) {
-            if(!visited[i]) {
-                visited[i] = true;
-                set.add(Integer.parseInt(s + numbers.charAt(i)));
-                dfs(numbers ,s + numbers.charAt(i), depth + 1);
-                visited[i] = false;
-            }
+        
+        for(int i = depth; i < n; i++){
+            swap(i, depth);
+            perm(depth + 1, target, str);
+            swap(depth, i);
         }
     }
- 
-    public static boolean isPrime(int n) {
-        if (n < 2) {
-            return false;
+    
+    public static void swap(int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    
+    
+    
+    public static boolean check(int k){
+        if(k == 0 || k == 1) return false;
+        for(int i = 2; i <= Math.sqrt(k); i++){
+            if(k%i == 0) return false;
         }
-		// 에라토스테네스 체
-        for (int i = 2; i <= (int) Math.sqrt(n); i++) {
-            if (n % i == 0) {
-                return false;
-            }
-        }
- 
         return true;
     }
 }
