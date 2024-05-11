@@ -1,9 +1,22 @@
-SELECT T.ITEM_ID, I.ITEM_NAME, I.RARITY
-FROM ITEM_INFO as I
-JOIN ITEM_TREE as T on I.ITEM_ID = T.ITEM_ID
-WHERE T.PARENT_ITEM_ID IN (
-                            SELECT ITEM_ID
-                            FROM ITEM_INFO
-                            WHERE RARITY = 'RARE'
-                            )
-ORDER BY 1 DESC;
+-- 코드를 작성해주세요
+
+with 
+T1 as (
+    select item_id
+    from ITEM_INFO 
+    where rarity = 'rare'
+),
+T2 as (
+    select item_id
+    from ITEM_TREE 
+    where parent_item_id in (select * from T1)
+),
+T3 as (
+    select T.item_id, I.item_name, I.rarity
+    from T2 as T
+    join ITEM_INFO as I on T.item_id = I.item_id
+)
+
+select * 
+from T3
+order by 1 desc;
