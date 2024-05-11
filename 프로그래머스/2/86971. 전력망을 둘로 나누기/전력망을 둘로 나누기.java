@@ -1,50 +1,48 @@
 import java.util.*;
 
 class Solution {
+    
     static int[] parents;
+    
     public int solution(int n, int[][] wires) {
+
+        int answer = n+1;
         
-        int answer = 101;
-        int idx = 0;
-        parents = new int[n+1];
-        
-        while(idx < n-1){
+        for(int i = 0; i < n-1; i++){
+            make(n);
             
-            // 처음에 부모를 모두 본인으로 설정
-            for(int i = 1; i < n+1; i++){
-                parents[i] = i;
+            for(int j = 0; j < n-1; j++){
+                if(j == i) continue;
+                union(wires[j][0], wires[j][1]);
             }
             
-            for(int i = 0; i < n-1; i++){
-                if(idx == i) continue; // 이번에 끊을 전력망은 cnt 번째 전력망
-                
-                union(wires[i][0], wires[i][1]); // union
+            int temp = 0; 
+            for(int j = 1;  j <= n; j++){
+                if(find(parents[j]) == 1) temp++;
             }
             
-            
-            int temp = 0;
-            for(int i = 1; i < n+1; i++){
-                if(find(parents[i]) == 1) temp++;
-            }
-            answer = Math.min(answer, Math.abs(temp - (n - temp)));
-            idx++;
-            
+            answer = Math.min(answer, Math.abs(temp - (n-temp)));
         }
         
         return answer;
     }
-
     
-   static int find(int v){
-        if(parents[v] == v) return v;
+    static public void make(int n) {
+        parents = new int[n+1];
+        for(int i = 1; i <= n; i++){
+            parents[i] = i;
+        }
+    }
+    
+    static public int find(int v){
+        if(v == parents[v]) return v;
         
         return parents[v] = find(parents[v]);
     }
     
-    static void union(int a, int b){
+    static public void union(int a, int b){
         int aRoot = find(a);
         int bRoot = find(b);
-        
         
         if(aRoot < bRoot){
             parents[bRoot] = aRoot;
